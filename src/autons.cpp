@@ -3,14 +3,14 @@
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(12, 1.4, 0.01, 10, 0);
-  chassis.set_heading_constants(10, 0.1, 0.03, 0.07, 0);
-  chassis.set_turn_constants(12, 0.105, 0.015, 0.03, 15);
+  chassis.set_drive_constants(12, 2, 0.05, 10, 0);
+  chassis.set_heading_constants(10, 0.12, 0.03, 0.07, 0);
+  chassis.set_turn_constants(12, 0.125, 0.01, 0.9, 15);
   chassis.set_swing_constants(12, 0.3, 0.01, 0.2, 15);
 
   // Each exit condition set is in the form (settle_error, settle_time, timeout).
   chassis.set_drive_exit_conditions(2, 125, 5000);
-  chassis.set_turn_exit_conditions(2.5, 50, 2000);
+  chassis.set_turn_exit_conditions(2, 50, 2000);
   chassis.set_swing_exit_conditions(2, 50, 2000);
 }
 
@@ -66,17 +66,16 @@ void farSide5Ball() {
   //Descores triball from matchload zone
   armPiston.open();
   chassis.drive_distance(9.5, -50, 10, 11);
-  chassis.right_swing_to_angle(-150, 12, chassis.swing_settle_error, chassis.swing_settle_time, 500, chassis.swing_kp, chassis.swing_ki, chassis.swing_kd, 15);
+  chassis.right_swing_to_angle(-140, 12, chassis.swing_settle_error, chassis.swing_settle_time, 500, chassis.swing_kp, chassis.swing_ki, chassis.swing_kd, 15);
   armPiston.close();
   //Scores two triballs
-  intakeMotor.spin(reverse, 25, pct);
   chassis.drive_distance(-5, -70, 10, 9);
-  intakeMotor.spin(reverse, 100, pct);
   chassis.drive_distance(40, -100, 12, 12, 1200);
   chassis.drive_distance(-6, -105);
-  chassis.turn_to_angle(-146, 12, 2, 0, 2000, 0.15, 0.01, 0.01, 15);
+  //Grabs ball from middle
+  chassis.turn_to_angle(-150, 12, 2, 0, 2000, 0.15, 0.01, 0.01, 15);
   intakeMotor.spin(fwd, 100, pct);
-  chassis.drive_distance(18, -155, 12, 3, 1000);
+  chassis.drive_distance(18, -160, 12, 3, 1000);
   chassis.turn_to_angle(-25);
   intakeMotor.spin(reverse, 100, pct);
   chassis.drive_distance(5);
@@ -230,10 +229,17 @@ void drive_test(){
 }
 
 void turn_test(){
+  while(chassis.Gyro.isCalibrating()) {
+    wait(20, msec);
+  }
   chassis.turn_to_angle(5);
+  wait(200, msec);
   chassis.turn_to_angle(30);
+  wait(200, msec);
   chassis.turn_to_angle(90);
+  wait(200, msec);
   chassis.turn_to_angle(225);
+  wait(200, msec);
   chassis.turn_to_angle(0);
 }
 
